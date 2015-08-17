@@ -43,6 +43,8 @@ namespace CAD.Azure
         public T GetById<T>(string Id)
         {
             return this.WhereQuery<T>("t.id = \"" + Id + "\"").AsEnumerable().FirstOrDefault();
+            //var document = this.GetById(Id);
+            //return (T)Convert.ChangeType(document,typeof(T));
         }
 
         public IQueryable<T> WhereQuery<T>(string whereQuery)
@@ -67,9 +69,31 @@ namespace CAD.Azure
             return this._dbClient.Query<T>(this._collection);
         }
 
-        public async Task<Document> Update(object updatedDocument)
+        public async Task<Document> Update(INoSQLDocument updatedDocument)
         {
-            return await this._dbClient.Update(this._collection, updatedDocument);
+            //get id by reflection
+            //var docLink = updatedDocument.GetType().GetProperty("DocumentLink").GetValue(updatedDocument, null);
+            var docLink = updatedDocument.DocumentLink;
+
+            if (!String.IsNullOrEmpty(docLink))
+            {
+                await this._dbClient.Update(docLink.ToString(), updatedDocument);
+                
+            }
+            else
+            {
+                //var id = updatedDocument.GetType().GetProperty("Id").GetValue(updatedDocument, null);
+                var id = updatedDocument.Id;
+                if (!String.IsNullOrEmpty(id))
+                {
+                    var existingDoc = this.GetById(id);
+                    if (existingDoc != null)
+                    {
+                        await this._dbClient.Update(existingDoc.SelfLink, updatedDocument);
+                    }
+                }
+            }
+            return null;
         }
 
         public bool Exists(string id)

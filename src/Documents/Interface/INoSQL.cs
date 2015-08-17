@@ -18,8 +18,8 @@ namespace CAD.Azure
         Document GetById(string collectionDocumentLink, string Id);
         IOrderedQueryable<T> Query<T>(DocumentCollection collection);
         IQueryable<T> Query<T>(DocumentCollection collection, string query);
-        Task<Document> Update(DocumentCollection collection, object updatedDocument);
-        Task<Document> Update(string collectionSelfLink, object updatedDocument);
+        Task<Document> Update(Document document, object updatedDocument);
+        Task<Document> Update(string documentSelfLink, object updatedDocument);
         bool Exists(DocumentCollection collection, string id);
         bool Exists(string collectionSelfLink, string id);
         void Dispose();

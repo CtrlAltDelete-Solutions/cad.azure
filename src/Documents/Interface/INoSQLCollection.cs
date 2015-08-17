@@ -15,7 +15,7 @@ namespace CAD.Azure
         IOrderedQueryable<T> Query<T>();
         IQueryable<T> WhereQuery<T>(string whereQuery);
         IQueryable<T> Query<T>(string query);
-        Task<Document> Update(object updatedDocument);
+        Task<Document> Update(INoSQLDocument updatedDocument);
         bool Exists(string id);
         void Dispose();
     }

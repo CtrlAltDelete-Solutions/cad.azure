@@ -100,14 +100,14 @@ namespace CAD.Azure
 
         }
 
-        public Task<Document> Update(DocumentCollection collection, object updatedDocument)
+        public Task<Document> Update(Document document, object updatedDocument)
         {
-            return this.Update(collection.SelfLink, updatedDocument);
+            return this.Update(document.SelfLink, updatedDocument);
         }
 
-        public async Task<Document> Update(string collectionSelfLink, object updatedDocument)
+        public async Task<Document> Update(string documentSelfLink, object updatedDocument)
         {
-            return await this._dbClient.ReplaceDocumentAsync(collectionSelfLink, updatedDocument);
+            return await this._dbClient.ReplaceDocumentAsync(documentSelfLink, updatedDocument);
         }
 
         public bool Exists(DocumentCollection collection, string id)

@@ -14,7 +14,7 @@ namespace CAD.Azure
         private readonly string _collectionName;
         private DocumentCollection _collection;
 
-        private const string _selectQueryFormat = "SELECT * from {0} t WHERE {1}";
+        private const string _selectQueryFormat = "SELECT t from {0} t WHERE {1}";
         private const string _collectionNameFormat = "[COLLECTION]";
 
         public AzureNoSQLCollection(INoSQL dbClient, string databaseName, string collectionName)

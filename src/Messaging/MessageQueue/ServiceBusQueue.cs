@@ -43,6 +43,41 @@ namespace CAD.Azure
             QueueClient client = QueueClient.CreateFromConnectionString(this._connectionString, queueName);
             client.Send(brokeredMessage);
             
+            
         }
+
+        public BrokeredMessage Peek(string queueName)
+        {
+            //initialize queue
+            this.Initialize(queueName);
+
+            QueueClient client = QueueClient.CreateFromConnectionString(this._connectionString, queueName);
+            return client.Peek();
+        }
+
+        public void Read(string queueName, Action<BrokeredMessage> callback, int autoRenewTimeOutInMinutes = 1)
+        {
+            //initialize queue
+            this.Initialize(queueName);
+
+            QueueClient client = QueueClient.CreateFromConnectionString(this._connectionString, queueName);
+            OnMessageOptions options = new OnMessageOptions();
+            options.AutoComplete = false;
+            options.AutoRenewTimeout = TimeSpan.FromMinutes(autoRenewTimeOutInMinutes);
+
+            client.OnMessage((message) => { 
+                try
+                {
+                    callback(message);
+                    message.Complete();
+                }
+                catch(Exception)
+                {
+                    message.Abandon();
+                }
+            }, options);
+
+        }
+        
     }
 }
